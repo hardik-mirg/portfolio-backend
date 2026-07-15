@@ -6,7 +6,9 @@ const PORT = process.env.PORT
 
 const api = require('./routes/api')
 
-app.use(cors("*"))
+app.use(cors({
+	origin: ['https://hardik.dpdns.org', 'http://localhost:3000']
+}))
 
 app.use(express.json())
 

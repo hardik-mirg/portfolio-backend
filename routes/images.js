@@ -10,7 +10,7 @@ router.get('/:id', async (req, res) => {
 
     try {
         await fs.access(filePath)
-        res.set('Cache-Control', 'public, max-age=0, must-revalidate');
+        res.set('Cache-Control', 'public, max-age=31536000, immutable');
         res.sendFile(filePath)
     } catch (err) {
         res.status(404).json({ error: 'Image not found' })
