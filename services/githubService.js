@@ -125,11 +125,26 @@ async function getStatsAndCommits() {
       });
     }
 
+    // 5. Fetch Profile Views
+    let viewsCount = '1,250+';
+    try {
+      const ghpvcRes = await fetch(`https://komarev.com/ghpvc/?username=${GITHUB_USERNAME}&label=Profile%20Views&color=0e75b6&style=flat`);
+      const svgString = await ghpvcRes.text();
+      const match = svgString.match(/<text[^>]*>(\d+)<\/text>\s*<\/g>/);
+      if (match) {
+        // Format with commas to match expected output if desired, or just raw string
+        const parsedViews = parseInt(match[1], 10);
+        viewsCount = isNaN(parsedViews) ? '1,250+' : parsedViews.toLocaleString();
+      }
+    } catch (err) {
+      console.warn('Failed to fetch profile views:', err.message);
+    }
+
     cache.stats = {
       commits: totalCommits,
       repositories: String(profile.public_repos || repos.length),
       stars: String(totalStars),
-      views: '1,250+' // Kept static/fallback since Views API requires push-access token
+      views: viewsCount
     };
     cache.commits = formattedCommits;
     cache.timestamp = now;
